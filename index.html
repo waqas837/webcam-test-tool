@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Webcam Test Tool</title>
+  <style>
+    body {
+      background: #f9f9f9;
+      font-family: 'Segoe UI', sans-serif;
+      color: #333;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #222;
+    }
+    #videoContainer {
+      display: inline-block;
+      position: relative;
+      margin: 2rem 0;
+    }
+    video {
+      width: 100%;
+      max-width: 640px;
+      border: 4px solid #555;
+      border-radius: 12px;
+      background: #000;
+    }
+    #infoBox {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧪 Webcam Test Tool</h1>
+  <p>Quickly test your webcam and view resolution — fast, private, and secure.</p>
+
+  <div id="videoContainer">
+    <video id="video" autoplay playsinline></video>
+  </div>
+
+  <div id="infoBox">
+    <div id="status">🎥 Accessing your camera...</div>
+    <div id="resolution"></div>
+  </div>
+
+  <footer>
+    <p><a href="https://webcamtest.live" target="_blank">Try the full version with mic test & true mirror</a></p>
+  </footer>
+
+  <script>
+    const video = document.getElementById("video");
+    const statusText = document.getElementById("status");
+    const resolutionText = document.getElementById("resolution");
+
+    async function startWebcamTest() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+
+        const videoTrack = stream.getVideoTracks()[0];
+        const settings = videoTrack.getSettings();
+
+        const width = settings.width || video.videoWidth || "Unknown";
+        const height = settings.height || video.videoHeight || "Unknown";
+
+        statusText.textContent = "✅ Camera connected.";
+        resolutionText.textContent = `🖥️ Resolution: ${width} x ${height}`;
+      } catch (err) {
+        statusText.innerHTML = `<span class="error">❌ Cannot access camera. Please check browser permissions.</span>`;
+        console.error("Webcam error:", err);
+      }
+    }
+
+    startWebcamTest();
+  </script>
+</body>
+</html>
